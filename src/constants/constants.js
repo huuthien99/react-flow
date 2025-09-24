@@ -1,7 +1,7 @@
 export const typeNodes = {
   WAIT: { label: "Wait" },
   HTTP_REQUEST: { label: "HTTP Request" },
-  TERM_MEMORY: { label: "Term Memory" },
+  TEMPORARY_MEMORY: { label: "Temporary Memory" },
   LOG: { label: "Log" },
   NEW_TAB: { label: "New Tab" },
   OPEN_URL: { label: "Open URL" },
