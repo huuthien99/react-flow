@@ -11,7 +11,7 @@ export default () => {
 
   return (
     <aside>
-      <div className="description">You can drag these nodes to the pane.</div>
+      <div className="description">You can drag these nodes </div>
       {Object.keys(typeNodes).map((key) => (
         <div
           key={key}
