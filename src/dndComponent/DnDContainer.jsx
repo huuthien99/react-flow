@@ -109,7 +109,7 @@ function DnDContainer() {
   return (
     <div className="dndflow">
       <SideBar />
-      <div style={{ height: "100vh", width: "100%" }}>
+      <div className="w-full h-[calc(100vh-4rem)]">
         <Header />
         <DialogCommon />
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
