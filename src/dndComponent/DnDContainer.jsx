@@ -10,14 +10,16 @@ import {
 } from "@xyflow/react";
 import { useCallback, useRef } from "react";
 
-import DialogCommon from "@/common/DialogCommon";
-import Header from "@/components/Header";
+import { useAppContext } from "@/App";
+import Header from "@/components/header/Header";
 import SideBar from "@/components/SideBar";
 import { typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
 import { useDnD } from "@/context/DnDContext";
-import CustomEdge from "./CustomEdges";
 import { v4 as uuidv4 } from "uuid";
+import CustomEdge from "./CustomEdges";
+import DialogDnD from "./DialogDnD";
+import { useEffect } from "react";
 
 const nodeDefaults = {
   sourcePosition: Position.Right,
@@ -40,7 +42,8 @@ const edgeTypes = {
 
 function DnDContainer() {
   const [type] = useDnD();
-  const [_, setOpen, __, setSelectedNode] = useDialog();
+  const { setOpen, setSelectedNode } = useDialog();
+  const [options] = useAppContext();
 
   const savedNodes = localStorage.getItem("reactFlowNodes");
   const savedEdges = localStorage.getItem("reactFlowEdges");
@@ -61,12 +64,12 @@ function DnDContainer() {
           {
             ...params,
             type: "custom",
-            animated: true,
+            animated: options.animated,
           },
           eds
         )
       ),
-    []
+    [options.animated]
   );
 
   const onDragOver = useCallback((event) => {
@@ -106,12 +109,38 @@ function DnDContainer() {
     setSelectedNode(node);
   };
 
+  useEffect(() => {
+    setEdges((eds) =>
+      eds.map((e) => {
+        return {
+          ...e,
+          animated: options.animated,
+        };
+      })
+    );
+  }, [options.animated]);
+
+  useEffect(() => {
+    if (options.isAutoSave) {
+      const prevNodes = localStorage.getItem("reactFlowNodes");
+      const nextNodes = JSON.stringify(nodes);
+      const prevEdges = localStorage.getItem("reactFlowEdges");
+      const nextEdges = JSON.stringify(edges);
+      if (prevEdges !== nextEdges) {
+        localStorage.setItem("reactFlowEdges", nextEdges);
+      }
+      if (prevNodes !== nextNodes) {
+        localStorage.setItem("reactFlowNodes", nextNodes);
+      }
+    }
+  }, [nodes, options.isAutoSave, edges]);
+
   return (
     <div className="dndflow">
       <SideBar />
       <div className="w-full h-[calc(100vh-4rem)]">
         <Header />
-        <DialogCommon />
+        <DialogDnD />
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}

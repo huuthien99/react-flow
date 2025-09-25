@@ -29,3 +29,14 @@ export const typeNodes = {
   GET_CONTENT_HTML: { label: "Get Content HTML", form: GetContentHtmlForm },
   SWITCH_IFRAME: { label: "Switch Iframe", form: SwitchIframeForm },
 };
+
+export const dialogTypes = {
+  NODE: "node",
+  SETTINGS: "settings",
+};
+
+export const AppOptions = {
+  IS_ANIMATED_EDGE: true,
+  IS_AUTO_SAVE: false,
+  IS_DEBUG_MODE: false,
+};
