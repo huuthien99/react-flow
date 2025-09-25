@@ -17,9 +17,7 @@ import { typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
 import { useDnD } from "@/context/DnDContext";
 import CustomEdge from "./CustomEdges";
-
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+import { v4 as uuidv4 } from "uuid";
 
 const nodeDefaults = {
   sourcePosition: Position.Right,
@@ -28,7 +26,7 @@ const nodeDefaults = {
 
 const initialNodes = [
   {
-    id: getId(),
+    id: uuidv4(),
     type: "input",
     data: { label: "Start" },
     position: { x: 200, y: 100 },
@@ -44,9 +42,15 @@ function DnDContainer() {
   const [type] = useDnD();
   const [_, setOpen, __, setSelectedNode] = useDialog();
 
+  const savedNodes = localStorage.getItem("reactFlowNodes");
+  const savedEdges = localStorage.getItem("reactFlowEdges");
+
+  const parsedNodes = savedNodes ? JSON.parse(savedNodes) : initialNodes;
+  const parsedEdges = savedEdges ? JSON.parse(savedEdges) : [];
+
   const reactFlowWrapper = useRef(null);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(() => parsedEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(() => parsedNodes);
 
   const { screenToFlowPosition } = useReactFlow();
 
@@ -81,22 +85,25 @@ function DnDContainer() {
         y: event.clientY,
       });
       const newNode = {
-        id: getId(),
+        id: uuidv4(),
         type,
         position,
-        data: { label: typeNodes[type].label },
+        data: {
+          label: typeNodes[type].label,
+          ...(typeNodes[type].dataDefault || {}),
+        },
         ...nodeDefaults,
       };
 
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => [...nds, newNode]);
     },
     [screenToFlowPosition, type]
   );
 
-  const onNodeClick = (node) => {
+  const onNodeClick = (_, node) => {
     if (node.type === "input") return;
-    setSelectedNode(node);
     setOpen(true);
+    setSelectedNode(node);
   };
 
   return (
