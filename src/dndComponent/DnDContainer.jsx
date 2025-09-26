@@ -192,6 +192,7 @@ function DnDContainer() {
             onEdgesChange={onEdgesChange}
             onNodeContextMenu={onNodeContextMenu}
             onSelectionContextMenu={onSelectionContextMenu}
+            deleteKeyCode={["Delete", "Backspace"]}
           >
             <Background variant="" />
             <Controls position="bottom-right" />
