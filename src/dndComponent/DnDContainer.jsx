@@ -2,7 +2,6 @@ import {
   addEdge,
   Background,
   Controls,
-  Position,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -13,15 +12,16 @@ import { useCallback, useRef } from "react";
 import { useAppContext } from "@/App";
 import Header from "@/components/header/Header";
 import SideBar from "@/components/SideBar";
-import { Color_line, typeNodes } from "@/constants/constants";
+import { typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
 import { useDnD } from "@/context/DnDContext";
+import StartNode from "@/nodes/StartNode";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import CustomEdge from "./CustomEdges";
-import DialogDnD from "./DialogDnD";
-import { useEffect } from "react";
-import StartNode from "@/nodes/StartNode";
 import CustomNode from "./CustomNode";
+import DialogDnD from "./DialogDnD";
+import DnDMenuClickRight from "./DnDMenuClickRight";
 
 const initialNodes = [
   {
@@ -42,9 +42,15 @@ const nodeTypes = {
 };
 
 function DnDContainer() {
+  //state react
+  const reactFlowWrapper = useRef(null);
+  const [openContextMenu, setOpenContextMenu] = useState(null);
+
+  //state from context
   const [type] = useDnD();
-  const { setOpen, setSelectedNode } = useDialog();
   const [options] = useAppContext();
+  const { setOpen, setSelectedNode } = useDialog();
+  const { screenToFlowPosition } = useReactFlow();
 
   const savedNodes = localStorage.getItem("reactFlowNodes");
   const savedEdges = localStorage.getItem("reactFlowEdges");
@@ -52,11 +58,8 @@ function DnDContainer() {
   const parsedNodes = savedNodes ? JSON.parse(savedNodes) : initialNodes;
   const parsedEdges = savedEdges ? JSON.parse(savedEdges) : [];
 
-  const reactFlowWrapper = useRef(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState(() => parsedEdges);
   const [nodes, setNodes, onNodesChange] = useNodesState(() => parsedNodes);
-
-  const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
     (params) =>
@@ -81,13 +84,13 @@ function DnDContainer() {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-      if (!type) {
-        return;
-      }
+      if (!type) return;
+
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
+
       const newNode = {
         id: uuidv4(),
         type: "custom",
@@ -105,11 +108,12 @@ function DnDContainer() {
   );
 
   const onNodeClick = (_, node) => {
-    if (node.type === "input") return;
+    if (node.type === "start") return;
     setOpen(true);
     setSelectedNode(node);
   };
 
+  // update edge when change option animated
   useEffect(() => {
     setEdges((eds) =>
       eds.map((e) => {
@@ -121,6 +125,7 @@ function DnDContainer() {
     );
   }, [options.animated]);
 
+  // auto save
   useEffect(() => {
     if (options.isAutoSave) {
       const prevNodes = localStorage.getItem("reactFlowNodes");
@@ -136,9 +141,17 @@ function DnDContainer() {
     }
   }, [nodes, options.isAutoSave, edges]);
 
+  // right click item node
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
-    console.log("Right clicked node:", node);
+    if (node.type === "start") return;
+    const pane = reactFlowWrapper.current.getBoundingClientRect();
+    setOpenContextMenu({
+      id: node.id,
+      x: event.clientX - pane.left,
+      y: event.clientY - pane.top,
+      open: true,
+    });
   }, []);
 
   return (
@@ -147,7 +160,7 @@ function DnDContainer() {
       <div className="w-full h-[calc(100vh-4rem)]">
         <Header />
         <DialogDnD />
-        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        <div ref={reactFlowWrapper} className="reactflow-wrapper">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -161,8 +174,14 @@ function DnDContainer() {
             onEdgesChange={onEdgesChange}
             onNodeContextMenu={onNodeContextMenu}
           >
-            <Background />
+            <Background variant="" />
             <Controls position="bottom-right" />
+            {openContextMenu && (
+              <DnDMenuClickRight
+                openContextMenu={openContextMenu}
+                setOpenContextMenu={setOpenContextMenu}
+              />
+            )}
           </ReactFlow>
         </div>
       </div>

@@ -15,7 +15,7 @@ function DialogDnD() {
   const { selectedNode, setSelectedNode } = useDialog();
   const [note, setNote] = useState();
 
-  const Form = selectedNode ? typeNodes[selectedNode?.type]?.form : null;
+  const Form = selectedNode ? typeNodes[selectedNode?.keyWord]?.form : null;
   const { setNodes } = useReactFlow();
 
   useEffect(() => {
