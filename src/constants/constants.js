@@ -40,3 +40,8 @@ export const AppOptions = {
   IS_AUTO_SAVE: false,
   IS_DEBUG_MODE: false,
 };
+
+export const Color_line = {
+  GREEN: "emerald-500",
+  RED: "red-500",
+};

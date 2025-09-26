@@ -1,48 +1,35 @@
-// import { Handle, Position } from "@xyflow/react";
-// import { useState } from "react";
+import { Color_line, typeNodes } from "@/constants/constants";
+import { Handle, Position } from "@xyflow/react";
 
-// function CustomNode({ data }) {
-//   const [open, setOpen] = useState(false);
+function CustomNode({ data, keyWord, id }) {
+  const config = typeNodes[keyWord];
 
-//   return (
-//     <div
-//       style={{
-//         padding: "10px 20px",
-//         border: "1px solid #333",
-//         borderRadius: "8px",
-//         background: "#fff",
-//         cursor: "pointer",
-//         position: "relative",
-//       }}
-//       onClick={() => setOpen(true)}
-//     >
-//       {data.label || "Custom Node"}
+  return (
+    <div className="px-3 py-2 rounded-[6px] min-w-28 h-12 flex items-center gap-2 border border-gray-800">
+      <span className="text-center w-full text-sm">
+        {data?.label || "Node"}
+      </span>
 
-//       <Handle type="target" position={Position.Top} />
-//       <Handle type="source" position={Position.Bottom} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className={`!bg-${Color_line.GREEN} !w-3 !h-3  border-white border-3`}
+      />
 
-//       {open && (
-//         <div
-//           style={{
-//             position: "absolute",
-//             top: "100%",
-//             left: "50%",
-//             transform: "translateX(-50%)",
-//             marginTop: "8px",
-//             background: "#fff",
-//             border: "1px solid #ccc",
-//             borderRadius: "6px",
-//             padding: "10px",
-//             zIndex: 10,
-//             boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
-//           }}
-//         >
-//           <p>Popup content cho node</p>
-//           <button onClick={() => setOpen(false)}>Đóng</button>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
+      <Handle
+        type="source"
+        id={`${id}-out-green`}
+        position={Position.Right}
+        className={`!bg-${Color_line.GREEN} !w-3 !h-3 border-3 border-white !top-[30%]`}
+      />
+      <Handle
+        type="source"
+        id={`${id}-out-red`}
+        position={Position.Right}
+        className={`!bg-${Color_line.RED} !w-3 !h-3 border-3 border-white !top-[70%]`}
+      />
+    </div>
+  );
+}
 
-// export default CustomNode;
+export default CustomNode;
