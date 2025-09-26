@@ -29,6 +29,7 @@ const initialNodes = [
     type: "start",
     data: { label: "Start" },
     position: { x: 200, y: 100 },
+    selected: false,
   },
 ];
 
@@ -95,6 +96,7 @@ function DnDContainer() {
         id: uuidv4(),
         type: "custom",
         position,
+        selected: false,
         keyWord: type,
         data: {
           label: typeNodes[type].label,
@@ -144,6 +146,7 @@ function DnDContainer() {
   // right click item node
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
+    event.stopPropagation();
     if (node.type === "start") return;
     const pane = reactFlowWrapper.current.getBoundingClientRect();
     setOpenContextMenu({

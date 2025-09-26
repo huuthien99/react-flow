@@ -1,4 +1,3 @@
-import { Color_line } from "@/constants/constants";
 import {
   BaseEdge,
   EdgeLabelRenderer,
