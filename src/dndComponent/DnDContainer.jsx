@@ -146,7 +146,6 @@ function DnDContainer() {
   // right click item node
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
-    event.stopPropagation();
     if (node.type === "start") return;
     const pane = reactFlowWrapper.current.getBoundingClientRect();
     setOpenContextMenu({
@@ -154,6 +153,22 @@ function DnDContainer() {
       x: event.clientX - pane.left,
       y: event.clientY - pane.top,
       open: true,
+      type: "single",
+    });
+  }, []);
+
+  const onSelectionContextMenu = useCallback((event, nodes) => {
+    event.preventDefault();
+    if (!nodes || nodes.length <= 1) return;
+
+    const pane = reactFlowWrapper.current.getBoundingClientRect();
+
+    setOpenContextMenu({
+      ids: nodes.map((n) => n.id),
+      x: event.clientX - pane.left,
+      y: event.clientY - pane.top,
+      open: true,
+      type: "multi",
     });
   }, []);
 
@@ -176,6 +191,7 @@ function DnDContainer() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeContextMenu={onNodeContextMenu}
+            onSelectionContextMenu={onSelectionContextMenu}
           >
             <Background variant="" />
             <Controls position="bottom-right" />
