@@ -1,11 +1,14 @@
-import { Color_line, typeNodes } from "@/constants/constants";
+import { typeNodes } from "@/constants/constants";
 import { Handle, Position } from "@xyflow/react";
 
-function CustomNode({ data, keyWord, id }) {
-  const config = typeNodes[keyWord];
-
+function CustomNode({ data, id, selected }) {
   return (
-    <div className="px-3 py-2 rounded-[6px] min-w-28 h-12 flex items-center gap-2 border border-gray-800">
+    <div
+      style={{
+        border: selected && "1px solid #4ade80",
+      }}
+      className="px-3 py-2 rounded-[6px] min-w-28 h-12 flex items-center gap-2 border border-gray-400 shadow-md hover:border-gray-600"
+    >
       <span className="text-center w-full text-sm">
         {data?.label || "Node"}
       </span>
@@ -13,20 +16,20 @@ function CustomNode({ data, keyWord, id }) {
       <Handle
         type="target"
         position={Position.Left}
-        className={`!bg-${Color_line.GREEN} !w-3 !h-3  border-white border-3`}
+        className={`!bg-emerald-500 !w-3 !h-3  border-white border-3`}
       />
 
       <Handle
         type="source"
         id={`${id}-out-green`}
         position={Position.Right}
-        className={`!bg-${Color_line.GREEN} !w-3 !h-3 border-3 border-white !top-[30%]`}
+        className={`!bg-emerald-500 !w-3 !h-3 border-3 border-white !top-[30%]`}
       />
       <Handle
         type="source"
         id={`${id}-out-red`}
         position={Position.Right}
-        className={`!bg-${Color_line.RED} !w-3 !h-3 border-3 border-white !top-[70%]`}
+        className={`!bg-red-500 !w-3 !h-3 border-3 border-white !top-[70%]`}
       />
     </div>
   );
