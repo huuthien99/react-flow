@@ -13,31 +13,32 @@ import { useCallback, useRef } from "react";
 import { useAppContext } from "@/App";
 import Header from "@/components/header/Header";
 import SideBar from "@/components/SideBar";
-import { typeNodes } from "@/constants/constants";
+import { Color_line, typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
 import { useDnD } from "@/context/DnDContext";
 import { v4 as uuidv4 } from "uuid";
 import CustomEdge from "./CustomEdges";
 import DialogDnD from "./DialogDnD";
 import { useEffect } from "react";
-
-const nodeDefaults = {
-  sourcePosition: Position.Right,
-  targetPosition: Position.Left,
-};
+import StartNode from "@/nodes/StartNode";
+import CustomNode from "./CustomNode";
 
 const initialNodes = [
   {
     id: uuidv4(),
-    type: "input",
+    type: "start",
     data: { label: "Start" },
     position: { x: 200, y: 100 },
-    ...nodeDefaults,
   },
 ];
 
 const edgeTypes = {
   custom: CustomEdge,
+};
+
+const nodeTypes = {
+  start: StartNode,
+  custom: CustomNode,
 };
 
 function DnDContainer() {
@@ -89,13 +90,13 @@ function DnDContainer() {
       });
       const newNode = {
         id: uuidv4(),
-        type,
+        type: "custom",
         position,
+        keyWord: type,
         data: {
           label: typeNodes[type].label,
           ...(typeNodes[type].dataDefault || {}),
         },
-        ...nodeDefaults,
       };
 
       setNodes((nds) => [...nds, newNode]);
@@ -135,6 +136,11 @@ function DnDContainer() {
     }
   }, [nodes, options.isAutoSave, edges]);
 
+  const onNodeContextMenu = useCallback((event, node) => {
+    event.preventDefault();
+    console.log("Right clicked node:", node);
+  }, []);
+
   return (
     <div className="dndflow">
       <SideBar />
@@ -148,10 +154,12 @@ function DnDContainer() {
             onDrop={onDrop}
             onConnect={onConnect}
             edgeTypes={edgeTypes}
+            nodeTypes={nodeTypes}
             onDragOver={onDragOver}
             onNodeClick={onNodeClick}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onNodeContextMenu={onNodeContextMenu}
           >
             <Background />
             <Controls position="bottom-right" />

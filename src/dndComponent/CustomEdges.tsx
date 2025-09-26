@@ -1,3 +1,4 @@
+import { Color_line } from "@/constants/constants";
 import {
   BaseEdge,
   EdgeLabelRenderer,
@@ -5,16 +6,18 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-function CustomEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  style = {},
-}) {
+function CustomEdge(props) {
+  const {
+    id,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+    sourceHandleId,
+    style = {},
+  } = props;
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -25,11 +28,19 @@ function CustomEdge({
   });
   const { deleteElements } = useReactFlow();
 
+  const colorLine = !sourceHandleId
+    ? "green"
+    : sourceHandleId.includes("red")
+    ? "red"
+    : sourceHandleId.includes("green")
+    ? "green"
+    : "black";
+
   return (
     <>
       <defs>
         <marker
-          id="arrowhead"
+          id={`arrowhead-${colorLine}`}
           markerWidth="8"
           markerHeight="8"
           refX="7"
@@ -37,7 +48,7 @@ function CustomEdge({
           orient="auto"
           markerUnits="strokeWidth"
         >
-          <path d="M0,0 L8,4 L0,8 Z" fill="#333" />
+          <path d="M0,0 L8,4 L0,8 Z" fill={colorLine} />
         </marker>
       </defs>
       <BaseEdge
@@ -45,10 +56,10 @@ function CustomEdge({
         path={edgePath}
         style={{
           strokeWidth: 1,
-          stroke: "#555",
+          stroke: colorLine,
           ...style,
         }}
-        markerEnd="url(#arrowhead)"
+        markerEnd={`url(#arrowhead-${colorLine})`}
       />
 
       <EdgeLabelRenderer>
