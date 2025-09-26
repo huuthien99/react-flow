@@ -4,109 +4,34 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useReactFlow } from "@xyflow/react";
-import { useCallback } from "react";
-import { v4 as uuidv4 } from "uuid";
+import useGroupNode from "@/hooks/useGroupNode";
+import useNodeFlow from "@/hooks/useNodeFlow";
 
 function DnDMenuClickRight({ openContextMenu, setOpenContextMenu }) {
   if (!openContextMenu) return null;
 
-  const { id, open, x, y, ids = [], type = "single" } = openContextMenu;
-  const { getNode, setNodes, addNodes, setEdges, getEdge } = useReactFlow();
+  const {
+    id,
+    open,
+    x,
+    y,
+    ids = [],
+    type = "single",
+    isGroup = false,
+  } = openContextMenu;
 
-  const duplicateNode = useCallback(() => {
-    const node = getNode(id);
+  const { groupSelectedNodes } = useGroupNode();
 
-    const position = {
-      x: node.position.x + 50 + Math.random() * 50,
-      y: node.position.y + 50 + Math.random() * 50,
-    };
+  const {
+    deleteNode,
+    duplicateNode,
+    duplicateMultipleNodesWithEdges,
+    handleMultiDelete,
+  } = useNodeFlow();
 
-    addNodes({
-      ...node,
-      selected: false,
-      dragging: false,
-      id: uuidv4(),
-      position,
-      data: { ...node.data },
-    });
-
-    setOpenContextMenu(null);
-  }, [id]);
-
-  const deleteNode = useCallback(() => {
-    setNodes((nodes) => nodes.filter((node) => node.id !== id));
-    setEdges((edges) => edges.filter((edge) => edge.source !== id));
-
-    setOpenContextMenu(null);
-  }, [id]);
-
-  const handleMultiDelete = useCallback(() => {
-    setNodes((nds) => nds.filter((n) => !ids.includes(n.id)));
-
-    setEdges((eds) =>
-      eds.filter((e) => !ids.includes(e.source) && !ids.includes(e.target))
-    );
-
-    setOpenContextMenu(null);
-  }, [ids]);
-
-  const duplicateMultipleNodesWithEdges = useCallback(() => {
-    if (!ids.length) return;
-
-    const newIdMap = {};
-    const selectedNodes = ids.map(getNode).filter(Boolean);
-    if (!selectedNodes.length) return;
-
-    // Duplicate nodes
-    const newNodes = selectedNodes.map((node) => {
-      const newId = uuidv4();
-      newIdMap[node.id] = newId;
-      return {
-        ...node,
-        id: newId,
-        position: {
-          x: node.position.x + 50,
-          y: node.position.y + 50 + y / 5,
-        },
-        selected: true,
-        dragging: false,
-        data: { ...node.data },
-      };
-    });
-
-    addNodes(newNodes);
-
-    setEdges((prevEdges) => {
-      const newEdges = prevEdges
-        .filter((e) => ids.includes(e.source) && ids.includes(e.target))
-        .map((e) => {
-          return {
-            ...e,
-            id: uuidv4(),
-            source: newIdMap[e.source],
-            target: newIdMap[e.target],
-            sourceHandle: e.sourceHandle.includes("out-green")
-              ? `${newIdMap[e.source]}-out-green`
-              : `${newIdMap[e.source]}-out-red`,
-            targetHandle: e.targetHandle,
-          };
-        });
-      return [...prevEdges, ...newEdges];
-    });
-
-    setNodes((nds) =>
-      nds.map((n) => (ids.includes(n.id) ? { ...n, selected: false } : n))
-    );
-
-    setOpenContextMenu(null);
-  }, [ids]);
   return (
     <div>
-      <DropdownMenu
-        open={open}
-        onOpenChange={(open) => setOpenContextMenu((m) => m && { ...m, open })}
-      >
+      <DropdownMenu open={open} onOpenChange={() => setOpenContextMenu(null)}>
         <DropdownMenuTrigger asChild>
           <div
             style={{
@@ -126,21 +51,34 @@ function DnDMenuClickRight({ openContextMenu, setOpenContextMenu }) {
         >
           {type === "multi" ? (
             <>
-              <DropdownMenuItem onClick={duplicateMultipleNodesWithEdges}>
+              <DropdownMenuItem
+                onClick={() => duplicateMultipleNodesWithEdges(ids, y)}
+              >
                 Duplicate Node
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleMultiDelete}>
+              <DropdownMenuItem onClick={() => handleMultiDelete(ids)}>
                 Delete Node
               </DropdownMenuItem>
+
+              {!isGroup && (
+                <DropdownMenuItem onClick={() => groupSelectedNodes(ids)}>
+                  Group Node
+                </DropdownMenuItem>
+              )}
             </>
           ) : (
             <>
-              <DropdownMenuItem onClick={duplicateNode}>
+              <DropdownMenuItem onClick={() => duplicateNode(id)}>
                 Duplicate Node
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={deleteNode}>
+              <DropdownMenuItem onClick={() => deleteNode(id)}>
                 Delete Node
               </DropdownMenuItem>
+              {isGroup && (
+                <DropdownMenuItem onClick={() => {}}>
+                  Delete Group
+                </DropdownMenuItem>
+              )}
             </>
           )}
         </DropdownMenuContent>

@@ -110,7 +110,7 @@ function DnDContainer() {
   );
 
   const onNodeClick = (_, node) => {
-    if (node.type === "start") return;
+    if (node.type === "start" || node.type === "group") return;
     setOpen(true);
     setSelectedNode(node);
   };
@@ -154,6 +154,7 @@ function DnDContainer() {
       y: event.clientY - pane.top,
       open: true,
       type: "single",
+      isGroup: node.type === "group",
     });
   }, []);
 
@@ -171,6 +172,8 @@ function DnDContainer() {
       type: "multi",
     });
   }, []);
+
+  const onPaneClick = useCallback(() => setContextMenu(null), []);
 
   return (
     <div className="dndflow">
@@ -193,6 +196,7 @@ function DnDContainer() {
             onNodeContextMenu={onNodeContextMenu}
             onSelectionContextMenu={onSelectionContextMenu}
             deleteKeyCode={["Delete", "Backspace"]}
+            onPaneClick={onPaneClick}
           >
             <Background variant="" />
             <Controls position="bottom-right" />
