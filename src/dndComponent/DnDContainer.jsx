@@ -12,7 +12,7 @@ import { useCallback, useRef } from "react";
 import { useAppContext } from "@/App";
 import Header from "@/components/header/Header";
 import SideBar from "@/components/SideBar";
-import { typeNodes } from "@/constants/constants";
+import { dialogTypes, typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
 import { useDnD } from "@/context/DnDContext";
 import StartNode from "@/nodes/StartNode";
@@ -50,7 +50,7 @@ function DnDContainer() {
   //state from context
   const [type] = useDnD();
   const [options] = useAppContext();
-  const { setOpen, setSelectedNode } = useDialog();
+  const { setOpen, setSelectedNode, setDialogType } = useDialog();
   const { screenToFlowPosition } = useReactFlow();
 
   const savedNodes = localStorage.getItem("reactFlowNodes");
@@ -112,6 +112,7 @@ function DnDContainer() {
   const onNodeClick = (_, node) => {
     if (node.type === "start" || node.type === "group") return;
     setOpen(true);
+    setDialogType(dialogTypes.NODE);
     setSelectedNode(node);
   };
 
@@ -198,7 +199,12 @@ function DnDContainer() {
             deleteKeyCode={["Delete", "Backspace"]}
             onPaneClick={onPaneClick}
           >
-            <Background variant="" />
+            <Background
+              gap={options.diagramOptions.gap}
+              size={options.diagramOptions.size}
+              variant={options.diagramOptions.meshType}
+              color={`rgba(0,0,0,${options.diagramOptions.transparent / 100})`}
+            />
             <Controls position="bottom-right" />
             {openContextMenu && (
               <DnDMenuClickRight

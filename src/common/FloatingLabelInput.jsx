@@ -10,6 +10,7 @@ function FloatingLabelInput({
   onExtraClick,
   type = "text",
   handleBlur = () => {},
+  isShowBtnExtra = true,
 }) {
   const allowOnlyNumber = (e) => {
     if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
@@ -33,15 +34,17 @@ function FloatingLabelInput({
             type={type}
             onBlur={handleBlur}
           />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground"
-            onClick={onExtraClick}
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          {isShowBtnExtra && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground"
+              onClick={onExtraClick}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
     </>
