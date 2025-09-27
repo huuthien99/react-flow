@@ -39,4 +39,10 @@ export const AppOptions = {
   IS_ANIMATED_EDGE: true,
   IS_AUTO_SAVE: false,
   IS_DEBUG_MODE: false,
+  DIAGRAM_OPTIONS: {
+    meshType: "dots",
+    transparent: 30,
+    gap: 20,
+    size: 1,
+  },
 };

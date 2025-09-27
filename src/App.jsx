@@ -22,6 +22,7 @@ function App() {
           animated: AppOptions.IS_ANIMATED_EDGE,
           isAutoSave: AppOptions.IS_AUTO_SAVE,
           isDebugMode: AppOptions.IS_DEBUG_MODE,
+          diagramOptions: { ...AppOptions.DIAGRAM_OPTIONS },
         };
   });
 
