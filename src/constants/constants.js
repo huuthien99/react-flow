@@ -15,19 +15,68 @@ export const typeNodes = {
   WAIT: {
     label: "Wait",
     form: WaitForm,
-    dataDefault: { typeWait: "random", timeWaitFrom: 1, timeWaitTo: 3 },
+    dataDefault: {
+      typeWait: "random",
+      timeWaitFrom: 1,
+      timeWaitTo: 3,
+      isSelectedPointDebug: false,
+    },
   },
-  HTTP_REQUEST: { label: "HTTP Request", form: HttpRequestForm },
-  TEMPORARY_MEMORY: { label: "Temporary Memory", form: TemporaryMemoryForm },
-  LOG: { label: "Log", form: LogForm },
-  NEW_TAB: { label: "New Tab", form: NewTabForm },
-  OPEN_URL: { label: "Open URL", form: OpenUrlForm },
-  SWITCH_TAB: { label: "Switch Tab", form: SwitchTabForm },
-  CLOSE_TAB: { label: "Close Tab", form: CloseTabForm },
-  RELOAD: { label: "Reload", form: ReloadForm },
-  GET_URL: { label: "Get URL", form: GetUrlForm },
-  GET_CONTENT_HTML: { label: "Get Content HTML", form: GetContentHtmlForm },
-  SWITCH_IFRAME: { label: "Switch Iframe", form: SwitchIframeForm },
+  HTTP_REQUEST: {
+    label: "HTTP Request",
+    form: HttpRequestForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  TEMPORARY_MEMORY: {
+    label: "Temporary Memory",
+    form: TemporaryMemoryForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  LOG: {
+    label: "Log",
+    form: LogForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  NEW_TAB: {
+    label: "New Tab",
+    form: NewTabForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  OPEN_URL: {
+    label: "Open URL",
+    form: OpenUrlForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  SWITCH_TAB: {
+    label: "Switch Tab",
+    form: SwitchTabForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  CLOSE_TAB: {
+    label: "Close Tab",
+    form: CloseTabForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  RELOAD: {
+    label: "Reload",
+    form: ReloadForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  GET_URL: {
+    label: "Get URL",
+    form: GetUrlForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  GET_CONTENT_HTML: {
+    label: "Get Content HTML",
+    form: GetContentHtmlForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
+  SWITCH_IFRAME: {
+    label: "Switch Iframe",
+    form: SwitchIframeForm,
+    dataDefault: { isSelectedPointDebug: false },
+  },
 };
 
 export const dialogTypes = {
