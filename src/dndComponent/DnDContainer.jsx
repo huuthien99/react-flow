@@ -22,6 +22,7 @@ import CustomEdge from "./CustomEdges";
 import CustomNode from "./CustomNode";
 import DialogDnD from "./DialogDnD";
 import DnDMenuClickRight from "./DnDMenuClickRight";
+import ConditionNode from "./ConditionNode";
 
 const initialNodes = [
   {
@@ -40,6 +41,7 @@ const edgeTypes = {
 const nodeTypes = {
   start: StartNode,
   custom: CustomNode,
+  condition: ConditionNode,
 };
 
 function DnDContainer() {
@@ -94,7 +96,7 @@ function DnDContainer() {
 
       const newNode = {
         id: uuidv4(),
-        type: "custom",
+        type: type === "CONDITION_NODE" ? "condition" : "custom",
         position,
         selected: false,
         keyWord: type,

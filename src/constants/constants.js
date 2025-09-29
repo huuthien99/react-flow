@@ -1,4 +1,5 @@
 import CloseTabForm from "@/templateForm/CloseTabForm";
+import ConditionNode from "@/templateForm/ConditionNode";
 import GetContentHtmlForm from "@/templateForm/GetContentHtmlForm";
 import GetUrlForm from "@/templateForm/GetUrlForm";
 import HttpRequestForm from "@/templateForm/HttpRequestForm";
@@ -10,6 +11,7 @@ import SwitchIframeForm from "@/templateForm/SwitchIframeForm";
 import SwitchTabForm from "@/templateForm/SwitchTabForm";
 import TemporaryMemoryForm from "@/templateForm/TemporaryMemoryForm";
 import WaitForm from "@/templateForm/WaitForm";
+import { v4 as uuidv4 } from "uuid";
 
 export const typeNodes = {
   WAIT: {
@@ -76,6 +78,19 @@ export const typeNodes = {
     label: "Switch Iframe",
     form: SwitchIframeForm,
     dataDefault: { isSelectedPointDebug: false },
+  },
+  CONDITION_NODE: {
+    label: "Condition",
+    form: ConditionNode,
+    dataDefault: {
+      isSelectedPointDebug: false,
+      conditions: [
+        {
+          id: uuidv4(),
+          label: "Condition 1",
+        },
+      ],
+    },
   },
 };
 
