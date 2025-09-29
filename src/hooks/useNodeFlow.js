@@ -48,16 +48,24 @@ function useNodeFlow() {
   );
 
   const duplicateMultipleNodesWithEdges = useCallback(
-    (ids = [], y) => {
+    (ids = [], y = 0) => {
       if (!ids.length) return;
 
       const newIdMap = {};
       const selectedNodes = ids.map(getNode).filter(Boolean);
 
-      // Duplicate nodes
+      // Duplicate nodes + conditions
       const newNodes = selectedNodes.map((node) => {
         const newId = uuidv4();
         newIdMap[node.id] = newId;
+
+        const newConditions =
+          node.data?.conditions?.map((c) => {
+            const newCondId = uuidv4();
+            newIdMap[c.id] = newCondId;
+            return { ...c, id: newCondId };
+          }) || [];
+
         return {
           ...node,
           id: newId,
@@ -67,27 +75,44 @@ function useNodeFlow() {
           },
           selected: true,
           dragging: false,
-          data: { ...node.data },
+          data: { ...node.data, conditions: newConditions },
         };
       });
 
       addNodes(newNodes);
 
+      // Duplicate edges
       setEdges((prevEdges) => {
         const newEdges = prevEdges
           .filter((e) => ids.includes(e.source) && ids.includes(e.target))
           .map((e) => {
+            let newSourceHandle = e.sourceHandle;
+
+            if (e.sourceHandle?.includes("out-green-condition")) {
+              const oldConditionId = e.sourceHandle.split(
+                "-out-green-condition"
+              )[0];
+              const newConditionId = newIdMap[oldConditionId];
+              newSourceHandle = `${newConditionId}-out-green-condition`;
+            } else if (e.sourceHandle?.includes("out-fallback")) {
+              newSourceHandle = `${newIdMap[e.source]}-out-fallback`;
+            } else if (e.sourceHandle?.includes("out-green-next")) {
+              newSourceHandle = `${newIdMap[e.source]}-out-green-next`;
+            } else if (e.sourceHandle?.includes("out-green")) {
+              newSourceHandle = `${newIdMap[e.source]}-out-green`;
+            } else if (e.sourceHandle?.includes("out-red")) {
+              newSourceHandle = `${newIdMap[e.source]}-out-red`;
+            }
+
             return {
               ...e,
               id: uuidv4(),
               source: newIdMap[e.source],
               target: newIdMap[e.target],
-              sourceHandle: e.sourceHandle.includes("out-green")
-                ? `${newIdMap[e.source]}-out-green`
-                : `${newIdMap[e.source]}-out-red`,
-              targetHandle: e.targetHandle,
+              sourceHandle: newSourceHandle,
             };
           });
+
         return [...prevEdges, ...newEdges];
       });
 
@@ -95,7 +120,7 @@ function useNodeFlow() {
         nds.map((n) => (ids.includes(n.id) ? { ...n, selected: false } : n))
       );
     },
-    [setEdges, setNodes, getNode, addNodes]
+    [getNode, addNodes, setNodes, setEdges]
   );
 
   return {

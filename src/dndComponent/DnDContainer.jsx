@@ -19,10 +19,10 @@ import StartNode from "@/nodes/StartNode";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import CustomEdge from "./CustomEdges";
-import CustomNode from "./CustomNode";
 import DialogDnD from "./DialogDnD";
 import DnDMenuClickRight from "./DnDMenuClickRight";
 import ConditionNode from "./ConditionNode";
+import NodeDefault from "./NodeDefault";
 
 const initialNodes = [
   {
@@ -40,7 +40,7 @@ const edgeTypes = {
 
 const nodeTypes = {
   start: StartNode,
-  custom: CustomNode,
+  custom: NodeDefault,
   condition: ConditionNode,
 };
 
@@ -65,18 +65,20 @@ function DnDContainer() {
   const [nodes, setNodes, onNodesChange] = useNodesState(() => parsedNodes);
 
   const onConnect = useCallback(
-    (params) =>
-      setEdges((eds) =>
-        addEdge(
+    (params) => {
+      return setEdges((eds) => {
+        return addEdge(
           {
             ...params,
             type: "custom",
             animated: options.animated,
+            keyword: type,
           },
           eds
-        )
-      ),
-    [options.animated]
+        );
+      });
+    },
+    [options.animated, type]
   );
 
   const onDragOver = useCallback((event) => {
@@ -176,7 +178,7 @@ function DnDContainer() {
     });
   }, []);
 
-  const onPaneClick = useCallback(() => setContextMenu(null), []);
+  const onPaneClick = useCallback(() => setOpenContextMenu(null), []);
 
   return (
     <div className="dndflow">
