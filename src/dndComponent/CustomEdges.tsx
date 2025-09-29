@@ -33,7 +33,7 @@ function CustomEdge(props) {
     ? "red"
     : sourceHandleId.includes("green")
     ? "green"
-    : "black";
+    : "orange";
 
   return (
     <>
