@@ -29,7 +29,7 @@ function NewTabForm({ selectedNode, handleBlur }) {
   return (
     <div className="space-y-4 mt-2">
       <div className="space-y-4">
-        <Label>Open tab with url</Label>
+        <Label>Open new tab with url</Label>
         <FloatingLabelInput
           label="URL"
           value={url}
@@ -65,7 +65,7 @@ function NewTabForm({ selectedNode, handleBlur }) {
           onExtraClick={() => {}}
           handleBlur={() => {
             if (timeWait === "") setTimeWait(0);
-            handleBlur && handleBlur({ typeWait: timeWait });
+            handleBlur && handleBlur({ timeWait: timeWait });
           }}
         />
       </div>

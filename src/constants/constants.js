@@ -52,7 +52,12 @@ export const typeNodes = {
   OPEN_URL: {
     label: "Open URL",
     form: OpenUrlForm,
-    dataDefault: { isSelectedPointDebug: false },
+    dataDefault: {
+      isSelectedPointDebug: false,
+      url: "",
+      typeLoad: "domContent",
+      timeWait: 0,
+    },
   },
   SWITCH_TAB: {
     label: "Switch Tab",
