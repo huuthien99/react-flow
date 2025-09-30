@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { dialogTypes, typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
 import { useReactFlow } from "@xyflow/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 function DialogDnD() {
   const { selectedNode, setSelectedNode } = useDialog();
   const [note, setNote] = useState();
@@ -22,20 +22,23 @@ function DialogDnD() {
     setNote(selectedNode?.data?.note || "");
   }, [selectedNode]);
 
-  const handleBlur = (data) => {
-    setNodes((prev) => {
-      const next = prev.map((node) =>
-        node.id === selectedNode?.id
-          ? { ...node, data: { ...node.data, ...data } }
-          : node
-      );
+  const handleBlur = useCallback(
+    (data) => {
+      setNodes((prev) => {
+        const next = prev.map((node) =>
+          node.id === selectedNode?.id
+            ? { ...node, data: { ...node.data, ...data } }
+            : node
+        );
 
-      // cập nhật lại selectedNode trong context
-      const updated = next.find((n) => n.id === selectedNode?.id);
-      setSelectedNode(updated);
-      return next;
-    });
-  };
+        // cập nhật lại selectedNode trong context
+        const updated = next.find((n) => n.id === selectedNode?.id);
+        setSelectedNode(updated);
+        return next;
+      });
+    },
+    [setNodes, selectedNode]
+  );
 
   return (
     <DialogCommon type={dialogTypes.NODE}>
