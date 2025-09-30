@@ -20,7 +20,7 @@ function DnDMenuClickRight({ openContextMenu, setOpenContextMenu }) {
     isGroup = false,
   } = openContextMenu;
 
-  const { groupSelectedNodes } = useGroupNode();
+  const { groupSelectedNodes, deleteGroup } = useGroupNode();
 
   const {
     deleteNode,
@@ -75,7 +75,11 @@ function DnDMenuClickRight({ openContextMenu, setOpenContextMenu }) {
                 Delete Node
               </DropdownMenuItem>
               {isGroup && (
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    deleteGroup(id);
+                  }}
+                >
                   Delete Group
                 </DropdownMenuItem>
               )}

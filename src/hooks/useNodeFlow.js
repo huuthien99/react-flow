@@ -54,13 +54,13 @@ function useNodeFlow() {
       const newIdMap = {};
       const selectedNodes = ids.map(getNode).filter(Boolean);
 
-      // Duplicate nodes + conditions
+      // Duplicate nodes + branches
       const newNodes = selectedNodes.map((node) => {
         const newId = uuidv4();
         newIdMap[node.id] = newId;
 
-        const newConditions =
-          node.data?.conditions?.map((c) => {
+        const newBranches =
+          node.data?.branches?.map((c) => {
             const newCondId = uuidv4();
             newIdMap[c.id] = newCondId;
             return { ...c, id: newCondId };
@@ -75,7 +75,7 @@ function useNodeFlow() {
           },
           selected: true,
           dragging: false,
-          data: { ...node.data, conditions: newConditions },
+          data: { ...node.data, branches: newBranches },
         };
       });
 

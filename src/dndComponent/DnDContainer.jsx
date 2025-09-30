@@ -81,7 +81,7 @@ function DnDContainer() {
     [options.animated, type]
   );
 
-  const onDragOver = useCallback((event) => {
+  const onDragOver = useCallback((event, node) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
@@ -202,6 +202,7 @@ function DnDContainer() {
             onSelectionContextMenu={onSelectionContextMenu}
             deleteKeyCode={["Delete", "Backspace"]}
             onPaneClick={onPaneClick}
+            proOptions={{ hideAttribution: true }}
           >
             <Background
               gap={options.diagramOptions.gap}
