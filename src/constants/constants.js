@@ -42,7 +42,12 @@ export const typeNodes = {
   NEW_TAB: {
     label: "New Tab",
     form: NewTabForm,
-    dataDefault: { isSelectedPointDebug: false },
+    dataDefault: {
+      isSelectedPointDebug: false,
+      url: "",
+      typeLoad: "domContent",
+      timeWait: 0,
+    },
   },
   OPEN_URL: {
     label: "Open URL",
