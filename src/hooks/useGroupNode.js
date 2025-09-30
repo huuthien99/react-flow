@@ -1,9 +1,12 @@
-import { useReactFlow } from "@xyflow/react";
+import { replaceSourceHandle } from "@/constants/helper";
+import { getNodesBounds, useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
+const GROUP_PADDING = 10;
+const GROUP_HEADER_H = 0;
 
 function useGroupNode() {
-  const { setNodes, getNodes } = useReactFlow();
+  const { setNodes, getNodes, setEdges } = useReactFlow();
 
   const groupSelectedNodes = useCallback(
     (ids = []) => {
@@ -14,27 +17,26 @@ function useGroupNode() {
 
       const selectedNodes = allNodes.filter((n) => ids.includes(n.id));
 
-      const minX = Math.min(...selectedNodes.map((n) => n.position.x));
-      const minY = Math.min(...selectedNodes.map((n) => n.position.y));
-      const maxX = Math.max(
-        ...selectedNodes.map((n) => n.position.x + (n.width || 100))
-      );
-      const maxY = Math.max(
-        ...selectedNodes.map((n) => n.position.y + (n.height || 50))
-      );
-      const padding = 20;
-      const groupX = minX - padding / 2;
-      const groupY = minY - padding / 2;
+      if (!selectedNodes.length) return;
 
-      const width = maxX - minX + padding;
-      const height = maxY - minY + padding;
+      const rect = getNodesBounds(selectedNodes);
+
+      const groupPosition = {
+        x: rect.x - GROUP_PADDING,
+        y: rect.y - GROUP_PADDING - GROUP_HEADER_H,
+      };
+
+      const groupSize = {
+        width: rect.width + GROUP_PADDING * 2,
+        height: rect.height + GROUP_PADDING * 2 + GROUP_HEADER_H,
+      };
 
       const newGroupNode = {
         id: newGroupNodeId,
         type: "group",
-        position: { x: minX, y: minY },
+        position: groupPosition,
         data: { label: null },
-        style: { width: width, height: height },
+        style: { width: groupSize.width, height: groupSize.height },
       };
 
       const updatedNodes = allNodes.map((node) =>
@@ -43,9 +45,10 @@ function useGroupNode() {
               ...node,
               parentId: newGroupNodeId,
               extent: "parent",
+
               position: {
-                x: node.position.x - groupX,
-                y: node.position.y - groupY,
+                x: node.position.x - groupPosition.x,
+                y: node.position.y - groupPosition.y,
               },
               selected: false,
               draggable: false,
@@ -57,7 +60,8 @@ function useGroupNode() {
     },
     [setNodes, getNodes]
   );
-  const deleteGroup = useCallback(
+
+  const unGroup = useCallback(
     (groupId) => {
       setNodes((nodes) => {
         const groupNode = nodes.find((n) => n.id === groupId);
@@ -84,7 +88,112 @@ function useGroupNode() {
     },
     [setNodes]
   );
-  return { groupSelectedNodes, deleteGroup };
+  const deleteGroupWithChildren = useCallback(
+    (groupId) => {
+      setNodes((nodes) => {
+        const childrenIds = nodes
+          .filter((n) => n.parentId === groupId)
+          .map((n) => n.id);
+
+        const idsToDelete = [groupId, ...childrenIds];
+
+        return nodes.filter((n) => !idsToDelete.includes(n.id));
+      });
+
+      setEdges((edges) =>
+        edges
+          .filter((e) => e.source !== groupId && e.target !== groupId)
+          .filter(
+            (e) =>
+              !getNodes().some(
+                (n) =>
+                  n.parentId === groupId &&
+                  (e.source === n.id || e.target === n.id)
+              )
+          )
+      );
+    },
+    [setNodes, setEdges, getNodes]
+  );
+
+  const duplicateGroup = useCallback(
+    (groupId) => {
+      const allNodes = getNodes();
+      const groupNode = allNodes.find((n) => n.id === groupId);
+      if (!groupNode) return;
+
+      const children = allNodes.filter((n) => n.parentId === groupId);
+
+      const newGroupId = uuidv4();
+
+      const newGroupNode = {
+        ...groupNode,
+        id: newGroupId,
+        position: {
+          x: groupNode.position.x + 50,
+          y: groupNode.position.y + 100,
+        },
+        selected: false,
+      };
+
+      const newIdMap = {};
+
+      newIdMap[groupId] = newGroupId;
+
+      const newChildren = children.map((child) => {
+        const newId = uuidv4();
+        newIdMap[child.id] = newId;
+
+        const newBranches =
+          child.data?.branches?.map((c) => {
+            const newCondId = uuidv4();
+            newIdMap[c.id] = newCondId;
+            return { ...c, id: newCondId };
+          }) || [];
+
+        return {
+          ...child,
+          id: newId,
+          parentId: newGroupId,
+          position: {
+            x: child.position.x,
+            y: child.position.y,
+          },
+          data: { ...child.data, branches: newBranches },
+        };
+      });
+
+      setEdges((eds) => {
+        const relatedIds = [groupId, ...children.map((c) => c.id)];
+        const newEdges = eds
+          .filter(
+            (e) =>
+              relatedIds.includes(e.source) || relatedIds.includes(e.target)
+          )
+          .map((e) => {
+            const newSourceHandle = replaceSourceHandle(e, newIdMap);
+            return {
+              ...e,
+              id: uuidv4(),
+              source: newIdMap[e.source] || e.source,
+              target: newIdMap[e.target] || e.target,
+              sourceHandle: newSourceHandle,
+            };
+          });
+
+        return [...eds, ...newEdges];
+      });
+
+      setNodes((nds) => [...nds, newGroupNode, ...newChildren]);
+    },
+    [getNodes, setNodes, setEdges]
+  );
+  return {
+    groupSelectedNodes,
+    deleteGroupWithChildren,
+    unGroup,
+    duplicateGroup,
+  };
 }
 
 export default useGroupNode;

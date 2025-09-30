@@ -20,7 +20,12 @@ function DnDMenuClickRight({ openContextMenu, setOpenContextMenu }) {
     isGroup = false,
   } = openContextMenu;
 
-  const { groupSelectedNodes, deleteGroup } = useGroupNode();
+  const {
+    groupSelectedNodes,
+    deleteGroupWithChildren,
+    unGroup,
+    duplicateGroup,
+  } = useGroupNode();
 
   const {
     deleteNode,
@@ -54,34 +59,45 @@ function DnDMenuClickRight({ openContextMenu, setOpenContextMenu }) {
               <DropdownMenuItem
                 onClick={() => duplicateMultipleNodesWithEdges(ids, y)}
               >
-                Duplicate Node
+                Duplicate
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleMultiDelete(ids)}>
-                Delete Node
+                Delete
               </DropdownMenuItem>
 
               {!isGroup && (
                 <DropdownMenuItem onClick={() => groupSelectedNodes(ids)}>
-                  Group Node
+                  Group
                 </DropdownMenuItem>
               )}
             </>
           ) : (
             <>
-              <DropdownMenuItem onClick={() => duplicateNode(id)}>
-                Duplicate Node
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => deleteNode(id)}>
-                Delete Node
-              </DropdownMenuItem>
-              {isGroup && (
-                <DropdownMenuItem
-                  onClick={() => {
-                    deleteGroup(id);
-                  }}
-                >
-                  Delete Group
-                </DropdownMenuItem>
+              {isGroup ? (
+                <>
+                  <DropdownMenuItem onClick={() => duplicateGroup(id)}>
+                    Duplicate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      unGroup(id);
+                    }}
+                  >
+                    UnGroup
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => deleteGroupWithChildren(id)}>
+                    Delete
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem onClick={() => duplicateNode(id)}>
+                    Duplicate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => deleteNode(id)}>
+                    Delete
+                  </DropdownMenuItem>
+                </>
               )}
             </>
           )}
