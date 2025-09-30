@@ -168,7 +168,7 @@ function useGroupNode() {
         const newEdges = eds
           .filter(
             (e) =>
-              relatedIds.includes(e.source) || relatedIds.includes(e.target)
+              relatedIds.includes(e.source) && relatedIds.includes(e.target)
           )
           .map((e) => {
             const newSourceHandle = replaceSourceHandle(e, newIdMap);

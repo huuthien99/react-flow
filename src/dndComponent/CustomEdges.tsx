@@ -35,6 +35,10 @@ function CustomEdge(props) {
     ? "green"
     : "orange";
 
+  const handleDeleteEdge = () => {
+    deleteElements({ edges: [{ id }] });
+  };
+
   return (
     <>
       <defs>
@@ -79,8 +83,9 @@ function CustomEdge(props) {
             lineHeight: "18px",
             opacity: 0,
             transition: "opacity 0.2s",
+            zIndex: 2,
           }}
-          onClick={() => deleteElements({ edges: [{ id }] })}
+          onClick={handleDeleteEdge}
         >
           ✕
         </span>

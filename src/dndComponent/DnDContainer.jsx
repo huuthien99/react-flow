@@ -72,7 +72,6 @@ function DnDContainer() {
             ...params,
             type: "custom",
             animated: options.animated,
-            keyword: type,
           },
           eds
         );
