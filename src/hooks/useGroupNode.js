@@ -48,6 +48,7 @@ function useGroupNode() {
                 y: node.position.y - groupY,
               },
               selected: false,
+              draggable: false,
             }
           : node
       );
@@ -56,7 +57,34 @@ function useGroupNode() {
     },
     [setNodes, getNodes]
   );
-  return { groupSelectedNodes };
+  const deleteGroup = useCallback(
+    (groupId) => {
+      setNodes((nodes) => {
+        const groupNode = nodes.find((n) => n.id === groupId);
+        if (!groupNode) return nodes;
+
+        return nodes
+          .filter((n) => n.id !== groupId) // xoá group node
+          .map((n) =>
+            n.parentId === groupId
+              ? {
+                  ...n,
+                  parentId: undefined,
+                  extent: undefined,
+                  draggable: true,
+                  // convert position relative -> absolute
+                  position: {
+                    x: n.position.x + groupNode.position.x,
+                    y: n.position.y + groupNode.position.y,
+                  },
+                }
+              : n
+          );
+      });
+    },
+    [setNodes]
+  );
+  return { groupSelectedNodes, deleteGroup };
 }
 
 export default useGroupNode;

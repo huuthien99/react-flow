@@ -1,4 +1,12 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useReactFlow } from "@xyflow/react";
 import { Edit2, Trash2 } from "lucide-react";
 import React, { useCallback, useState } from "react";
@@ -8,27 +16,37 @@ function ConditionNode({ selectedNode }) {
   const { data, id } = selectedNode;
   const { updateNodeData } = useReactFlow();
 
-  const [listBranch, setListBranch] = useState(() => data?.conditions || []);
+  const [listBranch, setListBranch] = useState(() => data?.branches || []);
+  const [openPopupAddCondition, setOpenPopupAddCondition] = useState(false);
+  const [selectedCondition, setSelectedCondition] = useState(null);
 
   const handleDelete = useCallback(
-    (conId) => {
-      const newConditions = listBranch.filter((cond) => cond.id !== conId);
+    (e, conId) => {
+      e.stopPropagation();
+      const newListBranches = listBranch.filter((cond) => cond.id !== conId);
 
-      updateNodeData(id, { conditions: newConditions });
-      setListBranch(newConditions);
+      updateNodeData(id, { branches: newListBranches });
+      setListBranch(newListBranches);
     },
     [id, updateNodeData, listBranch]
   );
 
   const handleAddBranch = () => {
-    const newCondition = {
+    const newBranch = {
       id: uuidv4(),
+      operator: "",
+      conditions: [],
       label: `Condition ${listBranch.length + 1}`,
-      rules: [],
     };
-    const newConditions = [...listBranch, newCondition];
-    updateNodeData(id, { conditions: newConditions });
-    setListBranch(newConditions);
+    const newBranches = [...listBranch, newBranch];
+    updateNodeData(id, { branches: newBranches });
+    setListBranch(newBranches);
+  };
+
+  const handleShowPopupAddCondition = (e, data) => {
+    e.stopPropagation();
+    setOpenPopupAddCondition(true);
+    setSelectedCondition(data);
   };
 
   return (
@@ -41,19 +59,40 @@ function ConditionNode({ selectedNode }) {
           <div
             key={condition.id}
             className="flex justify-between items-center px-1 py-3 border-b"
+            onClick={(e) => handleShowPopupAddCondition(e, condition)}
           >
             <p className="">{condition.label || "Condition"}</p>
             <div className="flex gap-4">
-              <Edit2 className="cursor-pointer" size={17} />
+              <Edit2
+                className="cursor-pointer"
+                size={17}
+                onClick={(e) => handleShowPopupAddCondition(e, condition)}
+              />
               <Trash2
                 size={17}
                 className="text-red-500 cursor-pointer"
-                onClick={() => handleDelete(condition.id)}
+                onClick={(e) => handleDelete(e, condition.id)}
               />
             </div>
           </div>
         ))}
       </div>
+      <Dialog
+        open={openPopupAddCondition}
+        onOpenChange={setOpenPopupAddCondition}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="border-b pb-2">
+              {selectedCondition?.label}
+            </DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

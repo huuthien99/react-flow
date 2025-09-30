@@ -21,8 +21,8 @@ function ConditionNode({ data, id, selected }) {
         />
 
         {/* Condition */}
-        {data?.conditions?.length > 0 &&
-          data.conditions.map((condition) => (
+        {data?.branches?.length > 0 &&
+          data.branches.map((condition) => (
             <div
               key={condition.id}
               className="relative flex items-center w-full rounded h-8 px-3"
@@ -40,7 +40,7 @@ function ConditionNode({ data, id, selected }) {
             </div>
           ))}
 
-        {data?.conditions?.length !== 0 && (
+        {data?.branches?.length !== 0 && (
           <>
             <div className="relative flex items-center justify-end w-full rounded h-8 px-3">
               <p className="text-sm">Preventive</p>

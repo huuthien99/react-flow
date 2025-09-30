@@ -84,10 +84,12 @@ export const typeNodes = {
     form: ConditionNode,
     dataDefault: {
       isSelectedPointDebug: false,
-      conditions: [
+      branches: [
         {
           id: uuidv4(),
-          label: "Condition 1",
+          operator: "",
+          conditions: [],
+          label: "Branch 1",
         },
       ],
     },
