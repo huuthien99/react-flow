@@ -1,3 +1,4 @@
+import ClickMouseForm from "@/templateForm/ClickMouseForm";
 import CloseTabForm from "@/templateForm/CloseTabForm";
 import ConditionNodeForm from "@/templateForm/ConditionNodeForm";
 import GetContentHtmlForm from "@/templateForm/GetContentHtmlForm";
@@ -102,6 +103,23 @@ export const typeNodes = {
           label: "Branch 1",
         },
       ],
+    },
+  },
+  CLICK_MOUSE: {
+    label: "Click mouse",
+    form: ClickMouseForm,
+    dataDefault: {
+      isSelectedPointDebug: false,
+      mode: "click",
+      pushBtn: "left",
+      selectType: "selector",
+      selectorType: "xpath",
+      coordinates: {
+        x: 0,
+        y: 0,
+      },
+      timeWait: 10,
+      elementSelector: "",
     },
   },
 };
