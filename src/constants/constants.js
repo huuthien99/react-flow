@@ -1,5 +1,5 @@
 import CloseTabForm from "@/templateForm/CloseTabForm";
-import ConditionNode from "@/templateForm/ConditionNode";
+import ConditionNodeForm from "@/templateForm/ConditionNodeForm";
 import GetContentHtmlForm from "@/templateForm/GetContentHtmlForm";
 import GetUrlForm from "@/templateForm/GetUrlForm";
 import HttpRequestForm from "@/templateForm/HttpRequestForm";
@@ -91,7 +91,7 @@ export const typeNodes = {
   },
   CONDITION_NODE: {
     label: "Condition",
-    form: ConditionNode,
+    form: ConditionNodeForm,
     dataDefault: {
       isSelectedPointDebug: false,
       branches: [

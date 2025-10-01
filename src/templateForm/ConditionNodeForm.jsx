@@ -1,3 +1,4 @@
+import FormCondition from "@/components/FormCondition";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +13,7 @@ import { Edit2, Trash2 } from "lucide-react";
 import React, { useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-function ConditionNode({ selectedNode }) {
+function ConditionNodeForm({ selectedNode }) {
   const { data, id } = selectedNode;
   const { updateNodeData } = useReactFlow();
 
@@ -81,15 +82,12 @@ function ConditionNode({ selectedNode }) {
         open={openPopupAddCondition}
         onOpenChange={setOpenPopupAddCondition}
       >
-        <DialogContent>
+        <DialogContent className={"min-h-[400px]"}>
           <DialogHeader>
             <DialogTitle className="border-b pb-2">
               {selectedCondition?.label}
             </DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </DialogDescription>
+            <FormCondition />
           </DialogHeader>
         </DialogContent>
       </Dialog>
@@ -97,4 +95,4 @@ function ConditionNode({ selectedNode }) {
   );
 }
 
-export default ConditionNode;
+export default ConditionNodeForm;
