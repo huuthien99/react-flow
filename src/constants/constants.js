@@ -11,6 +11,7 @@ import ReloadForm from "@/templateForm/ReloadForm";
 import SwitchIframeForm from "@/templateForm/SwitchIframeForm";
 import SwitchTabForm from "@/templateForm/SwitchTabForm";
 import TemporaryMemoryForm from "@/templateForm/TemporaryMemoryForm";
+import TypingTextForm from "@/templateForm/TypingTextForm";
 import WaitForm from "@/templateForm/WaitForm";
 import { v4 as uuidv4 } from "uuid";
 
@@ -119,6 +120,17 @@ export const typeNodes = {
         y: 0,
       },
       timeWait: 10,
+      elementSelector: "",
+    },
+  },
+  TYPING_TEXT: {
+    label: "Typing Text",
+    form: TypingTextForm,
+    dataDefault: {
+      isSelectedPointDebug: false,
+      selectorType: "",
+      text: "",
+      time: 0.1,
       elementSelector: "",
     },
   },
