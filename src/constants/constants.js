@@ -8,6 +8,7 @@ import LogForm from "@/templateForm/LogForm";
 import NewTabForm from "@/templateForm/NewTabForm";
 import OpenUrlForm from "@/templateForm/OpenUrlForm";
 import ReloadForm from "@/templateForm/ReloadForm";
+import SelectOptionsForm from "@/templateForm/SelectOptionsForm";
 import SwitchIframeForm from "@/templateForm/SwitchIframeForm";
 import SwitchTabForm from "@/templateForm/SwitchTabForm";
 import TemporaryMemoryForm from "@/templateForm/TemporaryMemoryForm";
@@ -132,6 +133,17 @@ export const typeNodes = {
       text: "",
       time: 0.1,
       elementSelector: "",
+    },
+  },
+  SELECT_OPTION: {
+    label: "Select Options", // chọn tùy chọn
+    form: SelectOptionsForm,
+    dataDefault: {
+      isSelectedPointDebug: false,
+      selectorType: "",
+      elementSelector: "",
+      value: "",
+      timeWait: 10,
     },
   },
 };
