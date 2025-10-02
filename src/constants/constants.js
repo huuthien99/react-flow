@@ -100,7 +100,6 @@ export const typeNodes = {
       branches: [
         {
           id: uuidv4(),
-          operator: "",
           conditions: [],
           label: "Branch 1",
         },

@@ -1,25 +1,18 @@
-import FormCondition from "@/components/FormCondition";
+import ConditionDialog from "@/components/Conditiondialog";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useReactFlow } from "@xyflow/react";
 import { Edit2, Trash2 } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 function ConditionNodeForm({ selectedNode }) {
+  if (!selectedNode) return null;
   const { data, id } = selectedNode;
   const { updateNodeData } = useReactFlow();
 
   const [listBranch, setListBranch] = useState(() => data?.branches || []);
   const [openPopupAddCondition, setOpenPopupAddCondition] = useState(false);
-  const [selectedCondition, setSelectedCondition] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState(null);
 
   const handleDelete = useCallback(
     (e, conId) => {
@@ -35,19 +28,35 @@ function ConditionNodeForm({ selectedNode }) {
   const handleAddBranch = () => {
     const newBranch = {
       id: uuidv4(),
-      operator: "",
       conditions: [],
-      label: `Condition ${listBranch.length + 1}`,
+      label: `Branch ${listBranch.length + 1}`,
     };
     const newBranches = [...listBranch, newBranch];
     updateNodeData(id, { branches: newBranches });
     setListBranch(newBranches);
   };
 
-  const handleShowPopupAddCondition = (e, data) => {
+  const handleShowPopupAddCondition = (e, data, indx) => {
     e.stopPropagation();
     setOpenPopupAddCondition(true);
-    setSelectedCondition(data);
+    setSelectedBranch({ ...data, indx: indx });
+  };
+
+  const updateBranchConditions = (newConditions) => {
+    setListBranch((prev) => {
+      const updated = [...prev];
+      const { indx = "" } = selectedBranch || {};
+      updated[indx] = { ...updated[indx], conditions: newConditions };
+
+      if (id) {
+        updateNodeData(id, {
+          ...data,
+          branches: updated,
+        });
+      }
+
+      return updated;
+    });
   };
 
   return (
@@ -56,18 +65,20 @@ function ConditionNodeForm({ selectedNode }) {
         Add Branch Condition
       </Button>
       <div>
-        {listBranch.map((condition) => (
+        {listBranch.map((condition, index) => (
           <div
             key={condition.id}
             className="flex justify-between items-center px-1 py-3 border-b"
-            onClick={(e) => handleShowPopupAddCondition(e, condition)}
+            onClick={(e) => handleShowPopupAddCondition(e, condition, index)}
           >
             <p className="">{condition.label || "Condition"}</p>
             <div className="flex gap-4">
               <Edit2
                 className="cursor-pointer"
                 size={17}
-                onClick={(e) => handleShowPopupAddCondition(e, condition)}
+                onClick={(e) =>
+                  handleShowPopupAddCondition(e, condition, index)
+                }
               />
               <Trash2
                 size={17}
@@ -78,19 +89,13 @@ function ConditionNodeForm({ selectedNode }) {
           </div>
         ))}
       </div>
-      <Dialog
+      <ConditionDialog
         open={openPopupAddCondition}
         onOpenChange={setOpenPopupAddCondition}
-      >
-        <DialogContent className={"min-h-[400px]"}>
-          <DialogHeader>
-            <DialogTitle className="border-b pb-2">
-              {selectedCondition?.label}
-            </DialogTitle>
-            <FormCondition />
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+        selectedBranch={selectedBranch}
+        listBranch={listBranch}
+        updateBranchConditions={updateBranchConditions}
+      />
     </div>
   );
 }
