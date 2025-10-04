@@ -2,14 +2,18 @@ import { ReactFlowProvider } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 
-import { DnDProvider } from "./context/DnDContext";
-import { DialogProvider } from "./context/DialogContext";
-import DnDContainer from "./dndComponent/DnDContainer";
-import { createContext } from "react";
-import { useState } from "react";
-import { useContext } from "react";
+import {
+  createContext,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { Route, Routes } from "react-router-dom";
 import { AppOptions } from "./constants/constants";
-import { useEffect } from "react";
+import { DialogProvider } from "./context/DialogContext";
+import { DnDProvider } from "./context/DnDContext";
+import { routes } from "./routers/router";
 
 const AppContext = createContext();
 
@@ -39,7 +43,13 @@ function App() {
       <ReactFlowProvider>
         <DnDProvider>
           <DialogProvider>
-            <DnDContainer />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Routes>
+                {routes.map((route, i) => (
+                  <Route key={i} path={route.path} element={route.element} />
+                ))}
+              </Routes>
+            </Suspense>
           </DialogProvider>
         </DnDProvider>
       </ReactFlowProvider>
