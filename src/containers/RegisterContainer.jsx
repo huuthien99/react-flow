@@ -12,9 +12,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { register } from "@/adapter/auth/auth";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
   password: z.string().min(6, {
@@ -28,11 +31,27 @@ export function RegisterContainer() {
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
-  function onSubmit(data) {
-    console.log("🚀 ~ onSubmit ~ data:", data);
-  }
+
+  const {
+    formState: { isSubmitting },
+  } = form;
+  const navigate = useNavigate();
+  const onSubmit = async (data) => {
+    try {
+      const res = await register(data);
+      toast.success(res.message, { position: "top-right" });
+      localStorage.setItem("accessToken", res?.access_token);
+      localStorage.setItem("user", JSON.stringify(res?.user));
+      navigate("/");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Error", {
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <div className="w-full h-[100vh] flex flex-col justify-center items-center">
@@ -57,7 +76,7 @@ export function RegisterContainer() {
           />
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username</FormLabel>
@@ -81,7 +100,10 @@ export function RegisterContainer() {
               </FormItem>
             )}
           />
-          <Button className="w-full" type="submit">
+          <p className="flex justify-end">
+            <a href="/login">Go to Login</a>
+          </p>
+          <Button disabled={isSubmitting} className="w-full" type="submit">
             Submit
           </Button>
         </form>

@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { login } from "@/adapter/auth/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,6 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const FormSchema = z.object({
   password: z.string().min(6, {
@@ -28,9 +31,25 @@ export function LoginContainer() {
       password: "",
     },
   });
-  function onSubmit(data) {
-    console.log("🚀 ~ onSubmit ~ data:", data);
-  }
+
+  const {
+    formState: { isSubmitting },
+  } = form;
+
+  const navigate = useNavigate();
+  const onSubmit = async (data) => {
+    try {
+      const res = await login(data);
+      toast.success(res.message, { position: "top-right" });
+      localStorage.setItem("accessToken", res?.access_token);
+      localStorage.setItem("user", JSON.stringify(res?.user));
+      navigate("/");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Error", {
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <div className="w-full h-[100vh] flex flex-col justify-center items-center">
@@ -66,7 +85,10 @@ export function LoginContainer() {
               </FormItem>
             )}
           />
-          <Button className="w-full" type="submit">
+          <p className="flex justify-end">
+            <a href="/register">Go to register</a>
+          </p>
+          <Button disabled={isSubmitting} type="submit" className="w-full">
             Submit
           </Button>
         </form>
