@@ -180,10 +180,9 @@ function DnDContainer() {
   const onPaneClick = useCallback(() => setOpenContextMenu(null), []);
 
   return (
-    <div className="dndflow">
+    <div className="dndflow h-[calc(100vh-4rem)]">
       <SideBar />
       <div className="w-full h-[calc(100vh-4rem)]">
-        <Header />
         <DialogDnD />
         <div ref={reactFlowWrapper} className="reactflow-wrapper">
           <ReactFlow

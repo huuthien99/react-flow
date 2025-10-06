@@ -11,7 +11,6 @@ export default () => {
 
   return (
     <aside className="h-full overflow-auto">
-      <div className="description">You can drag these nodes </div>
       {Object.keys(typeNodes).map((key) => (
         <div
           key={key}

@@ -3,15 +3,27 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
 const HomePage = lazy(() => import("@/pages/HomePage"));
+const ProcedurePage = lazy(() => import("@/pages/procedure/ProcedurePage"));
+const ProcedureAddPage = lazy(() =>
+  import("@/pages/procedure/ProcedureAddPage")
+);
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/RegisterPage"));
 
 export const routes = [
   {
-    path: "/",
+    path: "/procedure",
     element: (
       <ProtectedRoute>
-        <HomePage />
+        <ProcedurePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/procedure/new",
+    element: (
+      <ProtectedRoute>
+        <ProcedureAddPage />
       </ProtectedRoute>
     ),
   },
