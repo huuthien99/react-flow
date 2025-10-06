@@ -1,17 +1,11 @@
 import FloatingLabelInput from "@/common/FloatingLabelInput";
 import FloatingLabelTextarea from "@/common/FloatingLabelTextArea";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { EllipsisVertical, GitFork, SquareCode } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,10 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { cn } from "@/lib/utils";
-import { deleteProcedure } from "@/adapter/procedure";
-import { toast } from "sonner";
-function Cart({ data, handleDelete, handleUpdate }) {
+function Cart({ data, handleDelete, handleUpdate, handleNavigateDetail }) {
   const [open, setOpen] = useState(null);
   const [openDelete, setOpenDelete] = useState(null);
 
@@ -50,7 +41,8 @@ function Cart({ data, handleDelete, handleUpdate }) {
     });
   };
 
-  const onDelete = () => {
+  const onDelete = (e) => {
+    e.stopPropagation();
     if (handleDelete) handleDelete();
     setOpenDelete(false);
   };
@@ -60,8 +52,11 @@ function Cart({ data, handleDelete, handleUpdate }) {
   };
 
   return (
-    <div>
-      <div className="space-y-2 p-3 border rounded-[6px]">
+    <>
+      <div
+        className="space-y-2 p-3 border rounded-[6px] cursor-pointer"
+        onClick={handleNavigateDetail}
+      >
         <div className="flex justify-between">
           <div className="flex gap-2 items-center">
             <h3>{data?.name}</h3>
@@ -150,7 +145,7 @@ function Cart({ data, handleDelete, handleUpdate }) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
 
