@@ -9,7 +9,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Route, Routes } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { AppOptions } from "./constants/constants";
 import { DialogProvider } from "./context/DialogContext";
 import { DnDProvider } from "./context/DnDContext";
@@ -37,6 +43,15 @@ function App() {
       localStorage.setItem("appOptions", next);
     }
   }, [options]);
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (pathname === "/") {
+      navigate("/procedure", { replace: true });
+    }
+  }, [pathname]);
 
   return (
     <AppContext.Provider value={[options, setOptions]}>
