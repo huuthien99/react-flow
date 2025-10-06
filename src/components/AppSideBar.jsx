@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 const items = [
   {
     title: "Procedure",
-    url: "/",
+    url: "/procedure",
     icon: SplinePointer,
   },
 ];
