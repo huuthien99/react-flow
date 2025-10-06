@@ -43,7 +43,7 @@ export function LoginContainer() {
       toast.success(res.message, { position: "top-right" });
       localStorage.setItem("accessToken", res?.access_token);
       localStorage.setItem("user", JSON.stringify(res?.user));
-      navigate("/");
+      navigate("/procedure");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Error", {
         position: "top-right",
