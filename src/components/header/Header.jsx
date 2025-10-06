@@ -184,6 +184,7 @@ function Header({
           )}
         </div>
       </div>
+
       <Dialog open={openDelete?.open} onOpenChange={setOpenDelete}>
         <DialogContent>
           <DialogHeader>

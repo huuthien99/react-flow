@@ -98,7 +98,7 @@ function ProcedureAddPage() {
 
   return (
     <PrivateLayout>
-      <div className="h-full overflow-x-hidden">
+      <div className="overflow-hidden">
         <Header
           handleDelete={handleDelete}
           procedure={procedure}
@@ -107,7 +107,7 @@ function ProcedureAddPage() {
           handleSelect={handleSelect}
           handleAddProcedure={handleAddProcedure}
         />
-        <div className="max-h-[calc(100vh-4rem)]">
+        <div className="h-[calc(100vh-4rem)]">
           <DnDContainer
             defaultNodes={selected?.nodes || []}
             defaultEdges={selected?.edges || []}

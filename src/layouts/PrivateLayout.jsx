@@ -7,7 +7,7 @@ function PrivateLayout({ children }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div className="w-full h-full overflow-x-hidden">{children}</div>
+      <div className="w-full h-full">{children}</div>
     </SidebarProvider>
   );
 }

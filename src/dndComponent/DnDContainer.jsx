@@ -179,7 +179,7 @@ function DnDContainer({ defaultNodes, defaultEdges }) {
   const onPaneClick = useCallback(() => setOpenContextMenu(null), []);
 
   return (
-    <div className="dndflow h-[calc(100vh-4rem)]">
+    <div className="dndflow">
       <SideBar />
       <div className="w-full h-[calc(100vh-4rem)]">
         <DialogDnD />

@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -71,6 +71,7 @@ function ProcedureContainer() {
   };
 
   const handleNavigateDetail = (id) => {
+    console.log("🚀 ~ handleNavigateDetail ~ id:", id);
     navigate(`/procedure/${id}`);
   };
 
@@ -110,13 +111,14 @@ function ProcedureContainer() {
         )}
 
         {list?.map((item) => (
-          <Cart
-            handleDelete={() => handleDelete(item?._id)}
-            handleUpdate={handleUpdate}
-            key={item._id}
-            data={item}
-            handleNavigateDetail={() => handleNavigateDetail(item._id)}
-          />
+          <Fragment key={item._id}>
+            <Cart
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              data={item}
+              handleNavigateDetail={handleNavigateDetail}
+            />
+          </Fragment>
         ))}
       </div>
     </div>

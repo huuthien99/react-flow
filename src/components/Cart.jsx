@@ -43,7 +43,7 @@ function Cart({ data, handleDelete, handleUpdate, handleNavigateDetail }) {
 
   const onDelete = (e) => {
     e.stopPropagation();
-    if (handleDelete) handleDelete();
+    if (handleDelete) handleDelete(data?._id);
     setOpenDelete(false);
   };
 
@@ -51,11 +51,16 @@ function Cart({ data, handleDelete, handleUpdate, handleNavigateDetail }) {
     if (handleUpdate) handleUpdate(data?._id, value);
   };
 
+  const onNavigateDetail = (e) => {
+    e.stopPropagation();
+    if (handleNavigateDetail) handleNavigateDetail(data?._id);
+  };
+
   return (
     <>
       <div
+        onClick={onNavigateDetail}
         className="space-y-2 p-3 border rounded-[6px] cursor-pointer"
-        onClick={handleNavigateDetail}
       >
         <div className="flex justify-between">
           <div className="flex gap-2 items-center">
@@ -82,7 +87,12 @@ function Cart({ data, handleDelete, handleUpdate, handleNavigateDetail }) {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={() => setOpenDelete(true)}>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenDelete(true);
+                }}
+              >
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -122,7 +132,9 @@ function Cart({ data, handleDelete, handleUpdate, handleNavigateDetail }) {
                 </SelectContent>
               </Select>
               <div className="flex justify-end gap-2">
-                <Button variant={"outline"}>Cancel</Button>
+                <Button onClick={() => setOpen(false)} variant={"outline"}>
+                  Cancel
+                </Button>
                 <Button onClick={() => onUpdate()}>Update</Button>
               </div>
             </div>
