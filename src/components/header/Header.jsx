@@ -44,7 +44,7 @@ function Header() {
           {procedure?.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-1 p-1 border rounded-[6px]"
+              className="flex items-center gap-1 p-1 border rounded-[6px] cursor-pointer"
             >
               {item?.name}
               <Button
