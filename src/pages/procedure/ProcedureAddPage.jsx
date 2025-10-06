@@ -1,3 +1,4 @@
+import { createProcedure } from "@/adapter/procedure";
 import Header from "@/components/header/Header";
 import DnDContainer from "@/dndComponent/DnDContainer";
 import PrivateLayout from "@/layouts/PrivateLayout";
@@ -28,6 +29,7 @@ function ProcedureAddPage() {
       type: state,
     },
   ]);
+
   const navigate = useNavigate();
 
   const handleDelete = (data) => {
@@ -41,12 +43,12 @@ function ProcedureAddPage() {
         const newData = [...prev];
         setSelected(newData[exist - 1]);
         newData.splice(exist, 1);
-        setProcedure(newData);
+        return newData;
       });
     }
   };
 
-  const handleAddNew = () => {
+  const handleAddNewTab = () => {
     const newData = {
       id: uuidv4(),
       name: `Workflow ${procedure.length + 1}`,
@@ -64,14 +66,46 @@ function ProcedureAddPage() {
 
   const [selected, setSelected] = useState(() => procedure[0]);
 
+  const handleSelect = (data) => {
+    setSelected(data);
+  };
+
+  const handleAddProcedure = async (data) => {
+    try {
+      const res = await createProcedure(data);
+      if (res?.data) {
+        const newObj = {
+          ...res.data,
+          id: res.data._id,
+        };
+
+        setProcedure((prev) => {
+          const newData = [...prev];
+          const exist = prev.findIndex((item) => item.id === selected.id);
+
+          if (exist !== -1) {
+            newData.splice(exist, 1, newObj);
+          }
+
+          setSelected(newObj);
+          return newData;
+        });
+      }
+    } catch (error) {
+      console.log("🚀 ~ handleAddProcedure ~ error:", error);
+    }
+  };
+
   return (
     <PrivateLayout>
       <div className="h-full overflow-x-hidden">
         <Header
           handleDelete={handleDelete}
           procedure={procedure}
-          handleAddNew={handleAddNew}
-          selectedId={selected.id}
+          handleAddNewTab={handleAddNewTab}
+          selectedId={selected?.id}
+          handleSelect={handleSelect}
+          handleAddProcedure={handleAddProcedure}
         />
         <div className="max-h-[calc(100vh-4rem)]">
           <DnDContainer

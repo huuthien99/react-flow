@@ -44,14 +44,24 @@ function DnDContainer({ defaultNodes, defaultEdges }) {
   const { setOpen, setSelectedNode, setDialogType } = useDialog();
   const { screenToFlowPosition } = useReactFlow();
 
-  const savedNodes = localStorage.getItem("reactFlowNodes");
-  const savedEdges = localStorage.getItem("reactFlowEdges");
+  //const savedNodes = []; // localStorage.getItem("reactFlowNodes");
+  //const savedEdges = []; // localStorage.getItem("reactFlowEdges");
 
-  const parsedNodes = savedNodes ? JSON.parse(savedNodes) : defaultNodes;
-  const parsedEdges = savedEdges ? JSON.parse(savedEdges) : defaultEdges;
+  // const parsedNodes = savedNodes ? JSON.parse(savedNodes) : defaultNodes;
+  // const parsedEdges = savedEdges ? JSON.parse(savedEdges) : defaultEdges;
+  const parsedNodes = defaultNodes;
+  const parsedEdges = defaultEdges;
 
-  const [edges, setEdges, onEdgesChange] = useEdgesState(() => parsedEdges);
-  const [nodes, setNodes, onNodesChange] = useNodesState(() => parsedNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(() => defaultEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(() => defaultNodes);
+
+  useEffect(() => {
+    if (defaultNodes) setNodes(defaultNodes);
+  }, [defaultNodes, setNodes]);
+
+  useEffect(() => {
+    if (defaultEdges) setEdges(defaultEdges);
+  }, [defaultEdges, setEdges]);
 
   const onConnect = useCallback(
     (params) => {

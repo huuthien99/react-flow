@@ -70,6 +70,10 @@ function ProcedureContainer() {
     }
   };
 
+  const handleNavigateDetail = (id) => {
+    navigate(`/procedure/${id}`);
+  };
+
   if (loading) {
     return <div className="flex items-center justify-center">Loading!!!!</div>;
   }
@@ -111,6 +115,7 @@ function ProcedureContainer() {
             handleUpdate={handleUpdate}
             key={item._id}
             data={item}
+            handleNavigateDetail={() => handleNavigateDetail(item._id)}
           />
         ))}
       </div>
