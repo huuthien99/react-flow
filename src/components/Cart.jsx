@@ -82,7 +82,12 @@ function Cart({ data, handleDelete, handleUpdate, handleNavigateDetail }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-32">
-              <DropdownMenuItem onClick={() => setOpen(true)}>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpen(true);
+                }}
+              >
                 Update info
               </DropdownMenuItem>
               <DropdownMenuSeparator />
