@@ -70,19 +70,6 @@ function ProcedureContainer() {
     }
   };
 
-  // const handleCreate = async () => {
-  //   const data = {
-  //     name: "Flow 1",
-  //     description: "",
-  //   };
-  //   const res = await createProcedure(data);
-  //   if (res?.data) {
-  //     navigate(`/procedure/${res.data?._id}`);
-  //   }
-  //   try {
-  //   } catch (error) {}
-  // };
-
   if (loading) {
     return <div className="flex items-center justify-center">Loading!!!!</div>;
   }
@@ -107,7 +94,7 @@ function ProcedureContainer() {
           </Select>
         </div>
         <Button
-          onClick={() => navigate("/procedure/new")}
+          onClick={() => navigate("/procedure/new", { state: "diagram" })}
           className={"bg-emerald-400 hover:bg-emerald-500 rounded-[6px]"}
         >
           Add Procedure

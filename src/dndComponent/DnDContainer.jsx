@@ -10,7 +10,6 @@ import {
 import { useCallback, useRef } from "react";
 
 import { useAppContext } from "@/App";
-import Header from "@/components/header/Header";
 import SideBar from "@/components/SideBar";
 import { dialogTypes, typeNodes } from "@/constants/constants";
 import { useDialog } from "@/context/DialogContext";
@@ -18,21 +17,11 @@ import { useDnD } from "@/context/DnDContext";
 import StartNode from "@/nodes/StartNode";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import ConditionNode from "./ConditionNode";
 import CustomEdge from "./CustomEdges";
 import DialogDnD from "./DialogDnD";
 import DnDMenuClickRight from "./DnDMenuClickRight";
-import ConditionNode from "./ConditionNode";
 import NodeDefault from "./NodeDefault";
-
-const initialNodes = [
-  {
-    id: uuidv4(),
-    type: "start",
-    data: { label: "Start" },
-    position: { x: 200, y: 100 },
-    selected: false,
-  },
-];
 
 const edgeTypes = {
   custom: CustomEdge,
@@ -44,7 +33,7 @@ const nodeTypes = {
   condition: ConditionNode,
 };
 
-function DnDContainer() {
+function DnDContainer({ defaultNodes, defaultEdges }) {
   //state react
   const reactFlowWrapper = useRef(null);
   const [openContextMenu, setOpenContextMenu] = useState(null);
@@ -58,8 +47,8 @@ function DnDContainer() {
   const savedNodes = localStorage.getItem("reactFlowNodes");
   const savedEdges = localStorage.getItem("reactFlowEdges");
 
-  const parsedNodes = savedNodes ? JSON.parse(savedNodes) : initialNodes;
-  const parsedEdges = savedEdges ? JSON.parse(savedEdges) : [];
+  const parsedNodes = savedNodes ? JSON.parse(savedNodes) : defaultNodes;
+  const parsedEdges = savedEdges ? JSON.parse(savedEdges) : defaultEdges;
 
   const [edges, setEdges, onEdgesChange] = useEdgesState(() => parsedEdges);
   const [nodes, setNodes, onNodesChange] = useNodesState(() => parsedNodes);
