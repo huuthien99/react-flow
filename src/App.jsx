@@ -9,13 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AppOptions } from "./constants/constants";
 import { DialogProvider } from "./context/DialogContext";
 import { DnDProvider } from "./context/DnDContext";

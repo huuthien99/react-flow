@@ -131,20 +131,20 @@ function DnDContainer({ defaultNodes, defaultEdges }) {
   }, [options.animated]);
 
   // auto save
-  useEffect(() => {
-    if (options.isAutoSave) {
-      const prevNodes = localStorage.getItem("reactFlowNodes");
-      const nextNodes = JSON.stringify(nodes);
-      const prevEdges = localStorage.getItem("reactFlowEdges");
-      const nextEdges = JSON.stringify(edges);
-      if (prevEdges !== nextEdges) {
-        localStorage.setItem("reactFlowEdges", nextEdges);
-      }
-      if (prevNodes !== nextNodes) {
-        localStorage.setItem("reactFlowNodes", nextNodes);
-      }
-    }
-  }, [nodes, options.isAutoSave, edges]);
+  // useEffect(() => {
+  //   if (options.isAutoSave) {
+  //     const prevNodes = localStorage.getItem("reactFlowNodes");
+  //     const nextNodes = JSON.stringify(nodes);
+  //     const prevEdges = localStorage.getItem("reactFlowEdges");
+  //     const nextEdges = JSON.stringify(edges);
+  //     if (prevEdges !== nextEdges) {
+  //       localStorage.setItem("reactFlowEdges", nextEdges);
+  //     }
+  //     if (prevNodes !== nextNodes) {
+  //       localStorage.setItem("reactFlowNodes", nextNodes);
+  //     }
+  //   }
+  // }, [nodes, options.isAutoSave, edges]);
 
   // right click item node
   const onNodeContextMenu = useCallback((event, node) => {
