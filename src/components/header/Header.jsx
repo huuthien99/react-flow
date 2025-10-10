@@ -7,16 +7,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDialog } from "@/context/DialogContext";
 import { useReactFlow } from "@xyflow/react";
-import { ArrowLeft, EllipsisVertical, Plus } from "lucide-react";
+import { ArrowLeft, EllipsisVertical } from "lucide-react";
 
+import FloatingLabelInput from "@/common/FloatingLabelInput";
+import FloatingLabelTextarea from "@/common/FloatingLabelTextArea";
 import { dialogTypes } from "@/constants/constants";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import DialogSettings from "./DialogSettings";
-import FloatingLabelInput from "@/common/FloatingLabelInput";
-import FloatingLabelTextarea from "@/common/FloatingLabelTextArea";
 import {
   Select,
   SelectContent,
@@ -24,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import DialogSettings from "./DialogSettings";
+import { runFlow } from "@/adapter/flow";
 
 function Header({
   procedure,
@@ -90,6 +91,21 @@ function Header({
     if (handleAddProcedure) handleAddProcedure(data);
     setOpenCreate(false);
     setValue({ name: "", description: "", group: "ungrouped" });
+  };
+
+  const handleRun = async () => {
+    try {
+      const nodes = getNodes();
+      const edges = getEdges();
+
+      const data = {
+        nodes,
+        edges,
+      };
+      await runFlow(data);
+    } catch (error) {
+      console.log("🚀 ~ handleRun ~ error:", error);
+    }
   };
 
   return (
@@ -167,6 +183,7 @@ function Header({
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogSettings />
+          <Button onClick={handleRun}>Run</Button>
           {pathname === "/procedure/new" ? (
             <Button
               onClick={() => setOpenCreate(true)}
