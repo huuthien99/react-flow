@@ -48,7 +48,7 @@ export const typeNodes = {
     dataDefault: {
       isSelectedPointDebug: false,
       url: "",
-      typeLoad: "domContent",
+      typeLoad: "domcontentloaded",
       timeWait: 0,
     },
   },
@@ -58,7 +58,7 @@ export const typeNodes = {
     dataDefault: {
       isSelectedPointDebug: false,
       url: "",
-      typeLoad: "domContent",
+      typeLoad: "domcontentloaded",
       timeWait: 0,
     },
   },
