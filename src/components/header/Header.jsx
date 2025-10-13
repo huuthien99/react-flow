@@ -25,6 +25,7 @@ import {
 } from "../ui/select";
 import DialogSettings from "./DialogSettings";
 import { runFlow } from "@/adapter/flow";
+import FlowRun from "./FlowRun";
 
 function Header({
   procedure,
@@ -52,8 +53,6 @@ function Header({
       };
       handleUpdate(data);
     }
-    // localStorage.setItem("reactFlowNodes", JSON.stringify(nodes));
-    // localStorage.setItem("reactFlowEdges", JSON.stringify(edges));
   };
 
   const navigate = useNavigate();
@@ -102,7 +101,7 @@ function Header({
         nodes,
         edges,
       };
-      await runFlow(data);
+      // await runFlow(data);
     } catch (error) {
       console.log("🚀 ~ handleRun ~ error:", error);
     }
@@ -183,7 +182,8 @@ function Header({
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogSettings />
-          <Button onClick={handleRun}>Run</Button>
+          <FlowRun />
+          {/* <Button onClick={handleRun}>Run</Button> */}
           {pathname === "/procedure/new" ? (
             <Button
               onClick={() => setOpenCreate(true)}

@@ -41,7 +41,7 @@ function NewTabForm({ selectedNode, handleBlur }) {
       <div className="space-y-2">
         <Label>Wait until the event is triggered</Label>
         <Select
-          defaultValue={data?.typeLoad || "domContent"}
+          defaultValue={data?.typeLoad || "domcontentloaded"}
           onValueChange={(value) => handleBlur({ typeLoad: value })}
         >
           <SelectTrigger className="w-full">
@@ -49,9 +49,9 @@ function NewTabForm({ selectedNode, handleBlur }) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="load">Load</SelectItem>
-            <SelectItem value="domContent">Dom Content Loaded</SelectItem>
+            <SelectItem value="domcontentloaded">Dom Content Loaded</SelectItem>
             <SelectItem value="networkidle0">Networkidle0</SelectItem>
-            <SelectItem value="networkidle0">Networkidle2</SelectItem>
+            <SelectItem value="networkidle2">Networkidle2</SelectItem>
           </SelectContent>
         </Select>
       </div>

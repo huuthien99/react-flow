@@ -74,22 +74,19 @@ function ProcedureAddPage() {
     try {
       const res = await createProcedure(data);
       if (res?.data) {
-        const newObj = {
-          ...res.data,
-          id: res.data._id,
-        };
+        navigate(`/procedure/${res.data._id}`);
 
-        setProcedure((prev) => {
-          const newData = [...prev];
-          const exist = prev.findIndex((item) => item.id === selected.id);
+        // setProcedure((prev) => {
+        //   const newData = [...prev];
+        //   const exist = prev.findIndex((item) => item.id === selected.id);
 
-          if (exist !== -1) {
-            newData.splice(exist, 1, newObj);
-          }
+        //   if (exist !== -1) {
+        //     newData.splice(exist, 1, newObj);
+        //   }
 
-          setSelected(newObj);
-          return newData;
-        });
+        //   setSelected(newObj);
+        //   return newData;
+        // });
       }
     } catch (error) {
       console.log("🚀 ~ handleAddProcedure ~ error:", error);
